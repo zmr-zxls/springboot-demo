@@ -13,16 +13,18 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @Component
  * @Controller
  * @Respository
+ *
+ * @SpringBootApplication 是Spring Boot的核心注解，它是一个组合注解
  */
 @SpringBootApplication
 /*
     @EnableAutoConfiguration
     @ComponentScan(basePackages = "com.example")
 */
-public class DemoApplication implements ApplicationRunner{
+public class Application implements ApplicationRunner{
     public static void main(String[] args) {
         System.out.println(">>> Application starting....");
-        SpringApplication.run(DemoApplication.class, args);
+        SpringApplication.run(Application.class, args);
     }
 
     @Override

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>y用户列表</title>
+    <title>用户列表</title>
     <style>
         table {
             border-collapse: collapse;
