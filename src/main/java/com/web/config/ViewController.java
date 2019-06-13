@@ -14,10 +14,4 @@ public class ViewController implements WebMvcConfigurer {
     public void addViewControllers( ViewControllerRegistry registry ) {
         registry.addViewController( "/" ).setViewName( "static/index.html" );
     }
-//    @Bean
-//    public MultipartResolver multipartResolver () {
-//        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-//        multipartResolver.setMaxUploadSize(1000 * 1000);
-//        return multipartResolver;
-//    }
 }

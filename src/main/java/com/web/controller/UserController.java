@@ -29,6 +29,7 @@ public class UserController {
         // return new ResponseEntity<Object>(userService.getUsers(), HttpStatus.OK);
         ArrayList<User> users = userService.getUsers();
         model.addAttribute("users", users);
+        System.out.println("UserController response user/list.tpl");
         return "user/list";
     }
 
