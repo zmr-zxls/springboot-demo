@@ -1,37 +1,41 @@
 package com.web.service;
 
-import com.web.model.User;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
+
+import com.web.model.User;
+import com.web.repository.UserRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
-    private static ArrayList<User> users = new ArrayList<User>();
-    static {
-        for (int i=0; i<10; i++) {
-            User user = new User();
-            user.setId(i);
-            user.setUsername("jobs" + i);
-            user.setPassword("2424234" + i);
-            user.setPhoneNumber("135678905" + i);
-            users.add(user);
-        }
+    @Autowired
+    private UserRepository userRepository;
+    public User getUserById(String id) {
+        return userRepository.findById(id).get();
     }
-    public ArrayList<User> getUsers() {
-        return users;
+    public void deleteUser(String id) {
+        userRepository.deleteById(id);
     }
-    public User getUserById(int id) {
-        User user = null;
-        for(User temp : users) {
-            if (temp.getId() == id) {
-                user = temp;
-                break;
-            }
-        }
-        return user;
+    public ArrayList<User> getUserList () {
+        return (ArrayList<User>) userRepository.findAll();
     }
-    public boolean deleteUser(int id) {
-        return users.remove(this.getUserById(id));
+    public User getUser(String name, String password) {
+        // ArrayList<User> lst = userRepository.findByUsernameAndPassword(name, password);
+        // return lst.isEmpty() ? null : lst.get(0);
+        return userRepository.findOneByUsernameAndPassword(name, password);
+    }
+    public User saveUser(User user) {
+        return userRepository.save(user);
+    }
+	public User registerUser(String name, String pwd) {
+        User user = new User();
+        user.setUsername(name);
+        user.setPassword(pwd);
+		return this.saveUser(user);
+    }
+    public boolean existEqualName(String name) {
+        return userRepository.findOneByUsername(name) != null;
     }
 }

@@ -17,6 +17,7 @@ public class IntercepoterConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         // 静态资源不要拦截
         registry.addInterceptor(new LogInterceptor()).excludePathPatterns("/static/**");
-        registry.addInterceptor(new AuthIntercepoter()).excludePathPatterns("/static/**");
+        registry.addInterceptor(new AuthIntercepoter()).excludePathPatterns("/static/**", "/user/toLogin",
+            "/user/login", "/error", "/user/regsiter");
     }
 }
