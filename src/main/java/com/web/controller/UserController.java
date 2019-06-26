@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -65,8 +66,12 @@ public class UserController {
      */
     @RequestMapping(value = "/detail")
     @ResponseBody
-    public User userInfo (@RequestParam(value = "id", required = true) String id) {
-        return userService.getUserById(id);
+    public ApiResult userInfo (@RequestParam(value = "id", required = true) String id) {
+        User user = userService.getUserById(id);
+        if (user == null) {
+            return ApiResult.fail("用户不存在");
+        }
+        return ApiResult.success(user);
     }
     /**
      * 获取用户列表
@@ -168,5 +173,19 @@ public class UserController {
         }
         LOG.info("上传文件成功");
         return ApiResult.message(0, "上传文件成功");
+    }
+    /**
+     * 获取卡片
+     * @param id 用户id
+     * @param size 分页大小
+     * @param index 分页下标
+     * @return
+     */
+    @GetMapping("/cards")
+    @ResponseBody
+    public ApiResult getCards(@RequestParam("id") String id,
+        @RequestParam(value = "size", defaultValue = "15") int size,
+        @RequestParam(value = "index", defaultValue = "0") int index) {
+        return ApiResult.success(userService.getCards(id, PageRequest.of(index, size)));
     }
 }

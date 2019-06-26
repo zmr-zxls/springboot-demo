@@ -1,10 +1,21 @@
 package com.web.utils;
+
+import java.io.Serializable;
+
 /**
  * api接口返回数据格式
+ * <pre>
+ * {
+ *   code: int,
+ *   message: String,
+ *   data: Object
+ * }
+ * </pre>
  * @author zxls-zmr
  * @since 2019-06-20
  */
-public class ApiResult {
+public class ApiResult implements Serializable {
+  private static final long serialVersionUID = -2216231307851440477L;
   private int code;
   private String message;
   private Object data;

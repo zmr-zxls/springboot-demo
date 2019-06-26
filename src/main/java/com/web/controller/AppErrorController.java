@@ -27,6 +27,7 @@ public class AppErrorController implements ErrorController {
    * Web页面错误处理
    */
   @RequestMapping(value = ERROR_PATH, produces = "text/html")
+  @ExceptionHandler(value = { Exception.class })
   public String errorPageHandler(HttpServletRequest request, HttpServletResponse response, Exception e, Model model) {
     int status = response.getStatus();
     String errorMsg;

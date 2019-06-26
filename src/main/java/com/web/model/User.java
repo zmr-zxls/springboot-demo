@@ -1,6 +1,15 @@
 package com.web.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "user")
+// 去掉json空值
+@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 public class User {
+    @Id
     private String id;
     private String username;
     private String password;
@@ -54,5 +63,4 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
-    
 }
