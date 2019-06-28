@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.web.exceptions.NoSuchUserException;
+import com.web.exceptions.RepeatException;
 import com.web.model.Card;
 import com.web.model.User;
 import com.web.repository.UserRepository;
@@ -23,7 +25,10 @@ public class UserService {
     private UserDAO userDao;
     public User getUserById(String id) {
         Optional<User> op = userRepository.findUserById(id);
-        return op.isPresent() ? op.get() : null;
+        if (!op.isPresent()) {
+            throw new NoSuchUserException();
+        }
+        return op.get();
     }
     public void deleteUser(String id) {
         userRepository.deleteById(id);
@@ -39,10 +44,16 @@ public class UserService {
     public User saveUser(User user) {
         return userRepository.save(user);
     }
-	public User registerUser(String name, String pwd) {
-        User user = new User();
-        user.setUsername(name);
-        user.setPassword(pwd);
+    /**
+     * 用户注册
+     * @param name 用户名称
+     * @param pwd 用户密码
+     * @return
+     */
+	public User registerUser(User user) {
+        if (existEqualName(user.getUsername())) {
+            throw new RepeatException("用户姓名重复");
+        }
 		return this.saveUser(user);
     }
     public boolean existEqualName(String name) {

@@ -1,5 +1,7 @@
 package com.web.controller;
 
+import com.web.config.GlobalConfig;
+import com.web.entry.UserForm;
 import com.web.model.User;
 import com.web.service.UserService;
 import com.web.utils.ApiResult;
@@ -15,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,12 +28,16 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+import javax.validation.constraints.DecimalMin;
 
 /**
  * 用户Controller
+ * @Validated是参数校验
  */
 @Controller
 @RequestMapping("/user")
+@Validated
 public class UserController {
     private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
     @Autowired
@@ -66,12 +73,9 @@ public class UserController {
      */
     @RequestMapping(value = "/detail")
     @ResponseBody
-    public ApiResult userInfo (@RequestParam(value = "id", required = true) String id) {
-        User user = userService.getUserById(id);
-        if (user == null) {
-            return ApiResult.fail("用户不存在");
-        }
-        return ApiResult.success(user);
+    public ApiResult userInfo (HttpSession session) {
+        String userid = (String) session.getAttribute(GlobalConfig.COOKIE_ID);
+        return ApiResult.success(userService.getUserById(userid));
     }
     /**
      * 获取用户列表
@@ -93,16 +97,27 @@ public class UserController {
         userService.deleteUser(id);
         return new ResponseEntity<String>("删除成功", HttpStatus.OK);
     }
+    // @PostMapping(value = "/regsiter")
+    // @ResponseBody
+    // public ApiResult registerUser(@RequestParam("name") @NotEmpty(message = "用户姓名不能为空") String name,
+    //     @RequestParam("password") @NotEmpty(message = "用户密码不能为空") String pwd) {
+    //     return ApiResult.success(userService.registerUser(name, pwd));
+    // }
+    /**
+     * 用户注册
+     * spingboot参数自动绑定
+     * <p> @Valid 对绑定参数进行校验
+     * @param userForm
+     * @return
+     */
     @PostMapping(value = "/regsiter")
     @ResponseBody
-    public ApiResult registerUser(@RequestParam("name") String name, @RequestParam("password") String pwd) {
-        boolean exist = userService.existEqualName(name);
-        if (exist) {
-            LOG.info("用户已存在");
-            return ApiResult.fail("用户已存在");
-        }
-        User user = userService.registerUser(name, pwd);
-        return ApiResult.success(user);
+    public ApiResult registerUser(@Valid UserForm userForm) {
+        User user = new User();
+        user.setUsername(userForm.getUsername());
+        user.setEmail(userForm.getEmail());
+        user.setPassword(userForm.getPassword());
+        return ApiResult.success(userService.registerUser(user));
     }
     /**
      * 用户登录
@@ -114,7 +129,8 @@ public class UserController {
      */
     @PostMapping("/login")
     @ResponseBody
-    public ApiResult login(@RequestParam("name") String name, @RequestParam("password") String password, HttpServletRequest request, HttpServletResponse response) {
+    public ApiResult login(@RequestParam("name") String name, @RequestParam("password") String password,
+        HttpServletRequest request, HttpServletResponse response) {
         User user = userService.getUser(name, password);
         if (user == null) {
             LOG.info("登录失败");
@@ -136,11 +152,12 @@ public class UserController {
     }
     /**
      * 返回用户个人中心
+     * PathVarialbe 参数校验
      * @param id
      * @param model
      * @return
      */
-    @GetMapping(value = "/center/{id}")
+    @GetMapping(value = "/center/{id:\\d+}")
     public String user (@PathVariable("id") String id, Model model) {
         User user = userService.getUserById(id);
         model.addAttribute("user", user);
@@ -184,8 +201,8 @@ public class UserController {
     @GetMapping("/cards")
     @ResponseBody
     public ApiResult getCards(@RequestParam("id") String id,
-        @RequestParam(value = "size", defaultValue = "15") int size,
-        @RequestParam(value = "index", defaultValue = "0") int index) {
+        @RequestParam(value = "size", defaultValue = "15") @DecimalMin(value = "0", message = "值必须大于零") int size,
+        @RequestParam(value = "index", defaultValue = "0") @DecimalMin(value = "0", message = "值必须大于零") int index) {
         return ApiResult.success(userService.getCards(id, PageRequest.of(index, size)));
     }
 }

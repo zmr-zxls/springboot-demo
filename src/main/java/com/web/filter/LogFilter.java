@@ -16,6 +16,6 @@ public class LogFilter implements Filter {
       throws IOException, ServletException {
     System.out.println("LogFilter拦截之前->");
     chain.doFilter(request, response);
-    System.out.println("LoginFilter拦截之后->");
+    System.out.println("LogFilter拦截之后->");
   }
 }

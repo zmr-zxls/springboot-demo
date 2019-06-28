@@ -24,6 +24,8 @@ public class ApiResult implements Serializable {
   public enum Status {
     SUCCESS(200, "OK"),
     BAD_REQUEST(400, "Bad Request"),
+    FORBiDDEN_REQUEST(403, "Forbidden Request"),
+    NOT_Acceptable(405, "Not Acceptable"),
     NOT_FOUND(404, "Not Found"),
     INTERNAL_SERVER_ERROR(500, "Unknown Internal Error"),
     NOT_VALID_PARAM(40005, "Not valid Params"),
@@ -83,15 +85,13 @@ public class ApiResult implements Serializable {
   }
 
   public ApiResult(int code, String message, Object data) {
-    this.code = code;
-    this.message = message;
+    this(code, message);
     this.data = data;
   }
 
   public ApiResult(int code, String message) {
     this.code = code;
     this.message = message;
-    this.data = null;
   }
   public static ApiResult success(Object data) {
     return new ApiResult(Status.SUCCESS.getCode(), Status.SUCCESS.getMessage(), data);
@@ -105,7 +105,15 @@ public class ApiResult implements Serializable {
     return new ApiResult(status.getCode(), status.getMessage());
   }
 
+  public static ApiResult status(Status status, Object data) {
+    return new ApiResult(status.getCode(), status.getMessage(), data);
+  }
+
   public static ApiResult fail(String message) {
     return new ApiResult(Status.FAILED.getCode(), message);
+  }
+
+  public static ApiResult fail(String message, Object data) {
+    return new ApiResult(Status.FAILED.getCode(), message, data);
   }
 }
