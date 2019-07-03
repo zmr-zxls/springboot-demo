@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
 
 import com.web.exceptions.NoSuchUserException;
 import com.web.exceptions.RepeatException;
@@ -159,6 +160,15 @@ public class AppErrorController implements ErrorController {
       }
     }
     return msg;
+  }
+  /**
+   * validation内部异常处理
+   * @param ex
+   * @return
+   */
+  @ExceptionHandler(ValidationException.class)
+  public ApiResult resolveValidationException(ValidationException ex) {
+    return ApiResult.fail(ex.getCause().getMessage());
   }
   /**
    * 具有一般的异常，统一处理

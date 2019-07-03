@@ -5,6 +5,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.web.validator.annotation.PasswordValidator;
+
 import org.springframework.lang.Nullable;
 
 /**
@@ -18,7 +20,7 @@ public class UserForm {
 
   @NotNull
   @NotEmpty(message = "用户密码不能为空")
-  @Size(min = 6, max = 32, message = "密码长度6~32之间")
+  @PasswordValidator(level = 2, message = "密码复杂度不够")
   private String password;
 
   @Nullable

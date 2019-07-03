@@ -6,6 +6,7 @@ import com.web.config.GlobalConfig;
 import com.web.model.Card;
 import com.web.service.CardService;
 import com.web.utils.ApiResult;
+import com.web.validator.annotation.CardTypeValidator;
 
 import org.hibernate.validator.constraints.CreditCardNumber;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +29,8 @@ public class CardController {
     return ApiResult.success(cardService.getCards(userid));
   }
   @PostMapping("/save")
-  public ApiResult save(@RequestParam("cardType") String cardType,
-    HttpSession session,
+  public ApiResult save(HttpSession session,
+    @RequestParam("cardType")  @CardTypeValidator(message = "没有该类型的卡片") String cardType,
     @RequestParam("vandor") String vandor,
     @RequestParam("cardNumber") @CreditCardNumber(message = "非法的银行卡号") String cardNumber) {
     Card card = new Card();
