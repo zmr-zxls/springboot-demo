@@ -1,13 +1,15 @@
 package com.web.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "user")
 // 去掉json空值
-@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+// @JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL) 已过期
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@SuppressWarnings("unused")
 public class User {
     @Id
     private String id;
