@@ -26,12 +26,13 @@ public class AuthIntercepoter implements HandlerInterceptor {
         HttpSession session = request.getSession(false);
         if (session == null) {
             String acceptType = request.getHeader("Accept");
-            String loginUrl = "/user/toLogin";
-            LOG.info("未登录,重定向{}", loginUrl);
+            String loginUrl = "/login";
             // 如果接受json格式返回，json数据，以防前端ajax请求，而后端重定向导致客户端报错
             if (acceptType != null && acceptType.contains("application/json")) {
+                LOG.info("未登录,重定向[response json]");
                 HttpUtils.responseJson(response, ApiResult.status(Status.NOT_LOGIN, loginUrl));
             } else {
+                LOG.info("未登录,重定向{}", loginUrl);
                 // 如果不是没有声明接受json，默认重定向
                 response.sendRedirect(loginUrl);
             }

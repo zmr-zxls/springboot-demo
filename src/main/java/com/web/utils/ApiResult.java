@@ -97,6 +97,10 @@ public class ApiResult implements Serializable {
     return new ApiResult(Status.SUCCESS.getCode(), Status.SUCCESS.getMessage(), data);
   }
 
+  public static ApiResult success(Object data, String message) {
+    return new ApiResult(Status.SUCCESS.getCode(), message, data);
+  }
+
   public static ApiResult message(int code, String message) {
     return new ApiResult(code, message);
   }

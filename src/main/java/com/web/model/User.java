@@ -18,7 +18,15 @@ public class User {
     private String phoneNumber;
     private String email;
     private int level;
-    public String getUsername() {
+
+    public User () {
+    }
+    
+    public User(String userid) {
+        this.id = userid;
+	}
+
+	public String getUsername() {
         return username;
     }
 

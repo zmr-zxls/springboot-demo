@@ -13,7 +13,7 @@ public class SimplePage<T> implements Serializable {
   private List<T> list;
   private long total;
   private long size;
-  private long offset;
+  private long pageIndex;
 
   public SimplePage(List<T> list) {
     this.list = list;
@@ -24,10 +24,10 @@ public class SimplePage<T> implements Serializable {
 		this.total = total;
   }
 
-  public SimplePage(List<T> list, long total, long size, long offset) {
+  public SimplePage(List<T> list, long total, long size, long pageIndex) {
     this(list, total);
     this.size = size;
-    this.offset = offset;
+    this.pageIndex = pageIndex;
   }
   
   public List<T> getList() {
@@ -54,12 +54,13 @@ public class SimplePage<T> implements Serializable {
     this.size = size;
   }
 
-  public long getOffset() {
-    return offset;
+  public long getPageIndex() {
+    return pageIndex;
   }
 
-  public void setOffset(long offset) {
-    this.offset = offset;
+  public void setPageIndex(long pageIndex) {
+    this.pageIndex = pageIndex;
   }
+  
   
 }

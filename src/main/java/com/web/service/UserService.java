@@ -73,7 +73,7 @@ public class UserService {
         List<Card> cards = userDao.getCardsByUserid(userid, pageable, sort);
         // 统计总数
         long total = userDao.count(userid);
-        return new SimplePage<Card>(cards, total, pageable.getPageSize(), pageable.getOffset());
+        return new SimplePage<Card>(cards, total, pageable.getPageSize(), pageable.getPageNumber() + 1);
     }
     public SimplePage<Card> getCards(String userid, Pageable pageable) {
         return getCards(userid, pageable, null);

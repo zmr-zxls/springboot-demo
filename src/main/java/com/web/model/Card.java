@@ -1,5 +1,7 @@
 package com.web.model;
 
+import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import org.springframework.data.annotation.Id;
@@ -14,6 +16,8 @@ public class Card {
   private String cardNumber;
   private String type;
   private String vandor;
+  private String remarks;
+  private Date createTime;
   @DBRef
   private User user;
   public String getId() {
@@ -50,7 +54,7 @@ public class Card {
 
   @Override
   public String toString() {
-    return "Card [cardNumber=" + cardNumber + ", id=" + id + ", type=" + type + ", vandor=" + vandor + "]";
+    return "Card [cardNumber=" + cardNumber + ", id=" + id + ", type=" + type + ", vandor=" + vandor + ", remarks=" + remarks + "]";
   }
 
   public User getUser() {
@@ -59,6 +63,22 @@ public class Card {
 
   public void setUser(User user) {
     this.user = user;
+  }
+
+  public String getRemarks() {
+    return remarks;
+  }
+
+  public void setRemarks(String remarks) {
+    this.remarks = remarks;
+  }
+
+  public Date getCreateTime() {
+    return createTime;
+  }
+
+  public void setCreateTime(Date createTime) {
+    this.createTime = createTime;
   }
 
 }

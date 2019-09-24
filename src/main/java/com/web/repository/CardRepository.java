@@ -15,4 +15,5 @@ public interface CardRepository extends MongoRepository<Card, String> {
   Set<Card> findByUser(User user);
   // boolean exsitsCardNumber(String cardNumber);
   int countByCardNumber(String cardNumber);
+  // boolean exsitsByCardAnUser(Card card, User user);
 }

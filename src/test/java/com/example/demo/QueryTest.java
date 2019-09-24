@@ -1,8 +1,5 @@
 package com.example.demo;
 
-import java.util.List;
-import java.util.Set;
-
 import com.web.Application;
 import com.web.model.Card;
 import com.web.model.User;
@@ -23,13 +20,13 @@ public class QueryTest {
   @Autowired
   private CardService cardService;
 
-  @Test
-  public void findCardByUser() {
-    Set<Card> cards = cardService.getCards("5d0a1614d1d3f3044c880245");
-    for (Card card : cards) {
-      System.out.println(card.toString());
-    }
-  }
+  // @Test
+  // public void findCardByUser() {
+  //   Set<Card> cards = cardService.getCards("5d0a1614d1d3f3044c880245");
+  //   for (Card card : cards) {
+  //     System.out.println(card.toString());
+  //   }
+  // }
 
   @Test
   public void saveCardTest() {
@@ -47,15 +44,15 @@ public class QueryTest {
     System.out.println(card);
   }
 
-  @Test
-  public void findCardByUserTest() {
-    Set<Card> cards = cardService.getCards("5d0a1614d1d3f3044c880245");
-    System.out.println(cards);
-  }
+  // @Test
+  // public void findCardByUserTest() {
+  //   Set<Card> cards = cardService.getCards("5d0a1614d1d3f3044c880245");
+  //   System.out.println(cards);
+  // }
   
-  @Test
-  public void findCardsByUserid() {
-    List<Card> cards = userService.getCards("5d0a1614d1d3f3044c880245");
-    System.out.println(cards);
-  }
+  // @Test
+  // public void findCardsByUserid() {
+  //   List<Card> cards = userService.getCards("5d0a1614d1d3f3044c880245");
+  //   System.out.println(cards);
+  // }
 }
