@@ -52,19 +52,23 @@ public class CardService {
    * @param userid 用户id
    * @return Set<Card> 卡片集合
    */
-  public SimplePage<Card> getCards(String userid, Pageable pageable, Sort sort, String keywords) {
+  public SimplePage<Card> getCards(String userid, Integer status, Pageable pageable, Sort sort, String keywords) {
     // return cardRepository.findByUser(new User(userid));
-    List<Card> cards = cardDao.findCardsByUserid(userid, pageable, sort, keywords);
-    long total = cardDao.count(userid, keywords);
+    List<Card> cards = cardDao.findCardsByUserid(userid, status, pageable, sort, keywords);
+    long total = cardDao.count(userid, status, keywords);
     return new SimplePage<Card>(cards, total, pageable.getPageSize(), pageable.getPageNumber() + 1);
   }
 
   public SimplePage<Card> getCards(String userid, Pageable pageable) {
-    return getCards(userid, pageable, new Sort(Direction.DESC, "createTime"), null);
+    return getCards(userid, null, pageable, new Sort(Direction.DESC, "createTime"), null);
+  }
+
+  public SimplePage<Card> getCards(String userid, Integer status, Pageable pageable) {
+    return getCards(userid, status, pageable, new Sort(Direction.DESC, "createTime"), null);
   }
 
   public SimplePage<Card> getCards(String userid, Pageable pageable, String keywords) {
-    return getCards(userid, pageable, new Sort(Direction.DESC, "createTime"), keywords);
+    return getCards(userid, null, pageable, new Sort(Direction.DESC, "createTime"), keywords);
   }
 
   public Card getCardById(String id) {
@@ -89,5 +93,13 @@ public class CardService {
     // return cardRepository.save(card);
     cardDao.update(card);
     return getCardById(card.getId());
+  }
+  public void updateCardStatus(String id, String userid, int status) {
+    Card card = getCardById(id, userid);
+    if (card == null) {
+      throw new RuntimeException("未存在此卡片");
+    }
+    card.setStatus(status);
+    cardDao.updateStatus(id, status);
   }
 }

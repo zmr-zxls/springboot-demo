@@ -45,8 +45,8 @@ public class CardDAO {
    * @param pageable
    * @return
    */
-  public List<Card> findCardsByUserid(String userid, Pageable pageable, Sort sort) {
-    return findCardsByUserid(userid, pageable, sort, null);
+  public List<Card> findCardsByUserid(String userid, Integer status, Pageable pageable, Sort sort) {
+    return findCardsByUserid(userid, status, pageable, sort, null);
   }
   /**
    * 支持分页查询，排序，模糊查询
@@ -56,7 +56,7 @@ public class CardDAO {
    * @param keywords 模糊查询关键字
    * @return List<Card>卡片列表
    */
-  public List<Card> findCardsByUserid(String userid, Pageable pageable, Sort sort, String keywords) {
+  public List<Card> findCardsByUserid(String userid, Integer status, Pageable pageable, Sort sort, String keywords) {
     Query query = new Query();
     DBRef ref = new DBRef("user", userid);
     query.addCriteria(Criteria.where("user").is(ref)).fields().exclude("user");
@@ -66,10 +66,10 @@ public class CardDAO {
     if (pageable != null) {
       query.with(pageable);
     }
-    searchWrapper(query, keywords);
+    searchWrapper(query, status, keywords);
     return mongoTemplate.find(query, Card.class, "card");
   }
-  public void searchWrapper(Query query, String keywords) {
+  public void searchWrapper(Query query, Integer status, String keywords) {
     if (keywords != null && !"".equals(keywords)) {
       Pattern pattern = Pattern.compile("^.*?" + keywords + ".*?$", Pattern.CASE_INSENSITIVE);
       Criteria criteria = new Criteria();
@@ -81,14 +81,17 @@ public class CardDAO {
       );
       query.addCriteria(criteria);
     }
+    if (status != null) {
+      query.addCriteria(Criteria.where("status").is(status));
+    }
   }
   /**
    * 统计用户卡片总数
    * @param userid
    * @return
    */
-  public long count(String userid) {
-    return count(userid, null);
+  public long count(String userid, Integer status) {
+    return count(userid, status, null);
   }
 
   /**
@@ -96,11 +99,11 @@ public class CardDAO {
    * @param userid
    * @return
    */
-  public long count(String userid, String keywords) {
+  public long count(String userid, Integer status, String keywords) {
     Query query = new Query();
     query.addCriteria(Criteria.where("user").is(new DBRef("user", userid)));
 
-    searchWrapper(query, keywords);
+    searchWrapper(query, status, keywords);
 
     return mongoTemplate.count(query, Card.class, "card");
   }
@@ -121,5 +124,20 @@ public class CardDAO {
     Criteria c2 = Criteria.where("user").is(new DBRef("user", userid));
     query.addCriteria(c1).addCriteria(c2);
     return mongoTemplate.findOne(query, Card.class, "card");
+  }
+
+  /**
+   * 改变卡片状态
+   * @param id
+   * @param status
+   */
+  public void updateStatus(String id, int status) {
+    Query query = new Query();
+    query.addCriteria(Criteria.where("_id").is(id));
+
+    Update update = new Update();
+    update.set("status", status);
+
+    mongoTemplate.updateFirst(query, update, Card.class, "card");
   }
 }
